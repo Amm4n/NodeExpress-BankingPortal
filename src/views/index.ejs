@@ -1,10 +1,13 @@
 <%- include('header'); %>
 <div class="container">
+  <% if (locals.title) { %>
   <h1><%= title %></h1>
+  <% } %>
   <a href="/profile">Profile</a>
-  <br />
+  <a href="/transfer">Transfer</a>"
 </div>
-
-<a href="/transfer">Transfer</a>
-
-<%- include('footer'); %>
+<% if (locals.account) { %> <% account.forEach(accounts => { %>
+<p>Summary Account: <% accounts.savings %></p>
+<p>Summary Account: <% accounts.checking %></p>
+<p>Summary Account: <% accounts.credit %></p>
+<% })} %> <%- include('footer'); %>
