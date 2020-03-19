@@ -24,7 +24,7 @@ const accounts = JSON.parse(accountData)
 // END READ ACCOUNT DATA //
 
 app.get('/', (req, res) => {
-  res.render('index', { accounts })
+  res.render('index', { title: 'Account Summary', accounts })
 })
 
 app.get('/savings', (req, res) => {

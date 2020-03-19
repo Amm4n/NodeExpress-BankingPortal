@@ -6,8 +6,6 @@
   <a href="/profile">Profile</a>
   <a href="/transfer">Transfer</a>"
 </div>
-<% if (locals.account) { %> <% account.forEach(accounts => { %>
-<p>Summary Account: <% accounts.savings %></p>
-<p>Summary Account: <% accounts.checking %></p>
-<p>Summary Account: <% accounts.credit %></p>
-<% })} %> <%- include('footer'); %>
+<%- include('summary', { account: accounts.checking }) %> <%- include('summary', { account:
+accounts.savings }) %> <%- include('summary', { account: accounts.credit }) %> <%-
+include('footer'); %>
