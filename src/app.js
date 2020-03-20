@@ -1,8 +1,11 @@
 const express = require('express')
 const fs = require('fs')
 const path = require('path')
+const _ = require('lodash')
 const app = express()
 const PORT = 3000
+
+app.use(express.urlencoded({ extended: true }))
 
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
@@ -56,6 +59,57 @@ const users = JSON.parse(userData)
 
 app.get('/profile', (req, res) => {
   res.render('profile', { user: users[0] })
+})
+
+app.get('/transfer', (req, res) => {
+  res.render('transfer', {})
+})
+
+app.post('/transfer', (req, res) => {
+  // Making ptransfer
+  // let transfer = {
+  //   from: req.body.from,
+  //   to: req.body.to,
+  //   amount: req.body.amount
+  // }
+
+  var getSavings = _.get(accounts, 'savings')
+  var getChecking = _.get(accounts, 'checking')
+  let from = req.body.from
+  let to = req.body.to
+  let amount = req.body.amount
+  from === 'savings'
+    ? (getSavings.balance = getSavings.balance - amount)
+    : (getChecking.balance = getChecking.blance - amount)
+
+  to === 'savings'
+    ? (getSavings.balance = getSavings.balance + amount)
+    : (getChecking.balance = getChecking.blance + amount)
+
+  const accountsJSON = JSON.stringify(accounts)
+
+  fs.writeFileSync(path.join(__dirname, 'json/accounts.json'), accountsJSON, 'utf8')
+
+  res.render('transfer', { message: 'Transfer Completed' })
+
+  // FROM Balance
+  // get current balance (savings/checking) -> currentbalance - amount -> set currentbalance = new amount
+  res.redirect('/')
+})
+
+app.get('/payment', (req, res) => {
+  res.render('payment', { account: accounts.credit })
+})
+
+app.post('/payment', (req, res) => {
+  let accCreditBalance = _.get(accounts, 'credit.balance')
+  accCreditBalance = accCreditBalance - req.body.amount
+  let accCreditAvailable = _.get(accounts, 'credit.available')
+  accCreditAvailable = parseInt(req.body.amount) + parseInt(accCreditAvailable)
+  const accountsJSON = JSON.stringify(accounts)
+  fs.writeFileSync(path.join(__dirname, 'json/accounts.json'), accountsJSON, 'utf8')
+
+  res.render('payment', { message: 'Payment Successful', account: accounts.credit })
 })
 
 app.listen(PORT, () => {
