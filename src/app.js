@@ -12,14 +12,14 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 
 // START READ ACCOUNT DATA //
-const accountData = fs.readFileSync(path.join(__dirname, 'accounts.json'), 'utf8')
+const accountData = fs.readFileSync(path.join(__dirname, 'json', 'accounts.json'), 'utf8')
 const accounts = JSON.parse(accountData)
 // console.log('accounts', accounts)
 // console.log('accountData', accountData)
 // END READ ACCOUNT DATA //
 
 // START READ USER DATA //
-const userData = fs.readFileSync(path.json(__dirname, 'users.json'), 'utf8')
+const userData = fs.readFileSync(path.join(__dirname, 'json', 'users.json'), 'utf8')
 const users = JSON.parse(userData)
 // console.log('users', users)
 // console.log('userData', userData)
