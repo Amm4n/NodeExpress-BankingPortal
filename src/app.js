@@ -3,6 +3,8 @@ const fs = require('fs')
 const path = require('path')
 const _ = require('lodash')
 const { accounts, users, writeJSON } = require('./data')
+const accountRoutes = require('./routes/accounts')
+const servicesRoutes = require('./routes/services')
 const app = express()
 const PORT = 3000
 
@@ -30,59 +32,12 @@ app.get('/', (req, res) => {
   res.render('index', { title: 'Account Summary', accounts })
 })
 
-app.get('/savings', (req, res) => {
-  res.render('account', { account: accounts.savings })
-})
-
-app.get('/checking', (req, res) => {
-  res.render('account', { account: accounts.checking })
-})
-
-app.get('/credit', (req, res) => {
-  res.render('account', { account: accounts.credit })
-})
-
 app.get('/profile', (req, res) => {
   res.render('profile', { user: users[0] })
 })
 
-app.get('/transfer', (req, res) => {
-  res.render('transfer', {})
-})
-
-app.post('/transfer', (req, res) => {
-  // Making ptransfer
-  // let transfer = {
-  //   from: req.body.from,
-  //   to: req.body.to,
-  //   amount: req.body.amount
-  // }
-
-  accounts[req.body.from].balance -= req.body.amount
-  accounts[req.body.to].balance += parseInt(req.body.amount, 10)
-
-  // let accountsJSON = JSON.stringify(accounts)
-  // fs.writeFileSync(path.join(__dirname, 'json', 'accounts.json'), accountsJSON, 'utf8')
-
-  writeJSON()
-
-  res.render('transfer', { message: 'Transfer Completed' })
-})
-
-app.get('/payment', (req, res) => {
-  res.render('payment', { account: accounts.credit })
-})
-
-app.post('/payment', (req, res) => {
-  accounts.credit.balance -= req.body.amount
-  accounts.credit.available += parseInt(req.body.amount)
-
-  // let accountsJSON = JSON.stringify(accounts)
-  // fs.writeFileSync(path.join(__dirname, 'json', 'accounts.json'), accountsJSON, 'utf8')
-
-  writeJSON
-  res.render('payment', { message: 'Payment Successful', account: accounts.credit })
-})
+app.use('/account', accountRoutes)
+app.use('/services', servicesRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server running on port: ${PORT}`)
